@@ -37,7 +37,7 @@ suspend fun PlatformFile.toBufferedImage(): BufferedImage? = withContext(Dispatc
 @Preview
 fun App() {
     MaterialTheme {
-        val combine by remember { mutableStateOf(OCRCombiner(TesseractEngine())) }
+        val combine by remember { mutableStateOf(Recognizer(TesseractEngine())) }
         val defImage = BufferedImage(1920, 1080, BufferedImage.TYPE_INT_ARGB)
         val scope = rememberCoroutineScope()
         var showError by remember { mutableStateOf(false) }
@@ -65,7 +65,11 @@ fun App() {
             }
             Button(onClick = {
                 scope.launch {
-                    value = combine.run(image).fullText
+                    val img = image.image
+                    val whole = Region.of(Rect(0, 0, img.width, img.height))
+                    value = withContext(Dispatchers.Default) {
+                        combine.process(img to listOf(whole))
+                    }.joinToString("\n") { it.text }
                 }
             }) {
                 Text("recognize")

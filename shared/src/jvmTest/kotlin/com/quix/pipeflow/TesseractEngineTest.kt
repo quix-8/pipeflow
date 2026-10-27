@@ -23,10 +23,18 @@ class TesseractEngineTest {
 
     @Test
     fun recognizesEnglishAndRussian() {
-        val result = OCRCombiner(TesseractEngine()).run(ImageBlock(render("Hello Привет 12345"), ""))
+        val result = TesseractEngine().recognize(render("Hello Привет 12345"))
         println(result)
-        assertTrue("Hello" in result.fullText, result.fullText)
-        assertTrue("Привет" in result.fullText, result.fullText)
-        assertTrue("12345" in result.fullText, result.fullText)
+        assertTrue("Hello" in result.text, result.text)
+        assertTrue("Привет" in result.text, result.text)
+        assertTrue("12345" in result.text, result.text)
+    }
+
+    @Test
+    fun recognizerCropsRegions() {
+        val image = render("Hello Привет 12345")
+        val region = Region.of(Rect(0, 0, image.width, image.height))
+        val result = Recognizer(TesseractEngine()).process(image to listOf(region))
+        assertTrue("Hello" in result.single().text, result.single().text)
     }
 }
