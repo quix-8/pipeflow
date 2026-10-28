@@ -1,5 +1,9 @@
 package com.quix.pipeflow
 
+import com.quix.pipeflow.modules.Recognizer
+import com.quix.pipeflow.modules.Rect
+import com.quix.pipeflow.modules.Region
+import com.quix.pipeflow.modules.TesseractEngine
 import java.awt.Color
 import java.awt.Font
 import java.awt.RenderingHints

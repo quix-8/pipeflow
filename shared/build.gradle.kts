@@ -26,6 +26,7 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.onnxruntime)
             implementation(libs.tess4j)
+            implementation(libs.openpnp.opencv)
             implementation(libs.slf4j.simple)
         }
     }

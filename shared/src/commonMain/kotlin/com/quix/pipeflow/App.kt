@@ -13,6 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.quix.pipeflow.modules.OnnxMnistEngine
+import com.quix.pipeflow.modules.Recognizer
+import com.quix.pipeflow.modules.Rect
+import com.quix.pipeflow.modules.Region
+import com.quix.pipeflow.modules.TesseractEngine
+import com.quix.pipeflow.modules.mnistPreProcessor
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
@@ -41,14 +47,14 @@ fun App() {
         val defImage = BufferedImage(1920, 1080, BufferedImage.TYPE_INT_ARGB)
         val scope = rememberCoroutineScope()
         var showError by remember { mutableStateOf(false) }
-        var image by remember { mutableStateOf(ImageBlock(defImage, "")) }
+        var img by remember { mutableStateOf(defImage) }
         var value by remember { mutableStateOf<String>("") }
         val launcher = rememberFilePickerLauncher(
             type = FileKitType.Image,
             onError = { showError = true },
             onResult = { file ->
                 scope.launch {
-                    image = ImageBlock(file?.toBufferedImage() ?: defImage, file?.path ?: "")
+                    img = file?.toBufferedImage() ?: defImage
                 }
 
             },
@@ -65,11 +71,12 @@ fun App() {
             }
             Button(onClick = {
                 scope.launch {
-                    val img = image.image
-                    val whole = Region.of(Rect(0, 0, img.width, img.height))
-                    value = withContext(Dispatchers.Default) {
-                        combine.process(img to listOf(whole))
-                    }.joinToString("\n") { it.text }
+                    val engine = OnnxMnistEngine()
+//                    val whole = Region.of(Rect(0, 0, img.width, img.height))
+//                    value = withContext(Dispatchers.Default) {
+//                        combine.process(img to listOf(whole))
+//                    }.joinToString("\n") { it.text }
+                    value = engine.recognize(mnistPreProcessor().process(img)).text
                 }
             }) {
                 Text("recognize")

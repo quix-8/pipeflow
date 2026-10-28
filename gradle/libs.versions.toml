@@ -8,6 +8,7 @@ tess4j = "5.20.0"
 onnxruntime = "1.31.0"
 filekit = "0.16.0"
 slf4j = "2.0.20"
+opencv = "4.9.0-0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -22,6 +23,7 @@ tess4j = { module = "net.sourceforge.tess4j:tess4j", version.ref = "tess4j" }
 onnxruntime = { module = "com.microsoft.onnxruntime:onnxruntime", version.ref = "onnxruntime" }
 filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs", version.ref = "filekit" }
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
+openpnp-opencv = { module = "org.openpnp:opencv", version.ref = "opencv" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
 [plugins]
