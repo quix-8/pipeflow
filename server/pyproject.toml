@@ -1,0 +1,31 @@
+[project]
+name = "pipeflow-server"
+version = "0.1.0"
+description = "OCR pipeline server for Pipeflow (MNIST digits, tables, Tesseract)"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "python-multipart>=0.0.9",
+    "numpy>=2.0",
+    "opencv-python-headless>=4.10",
+    "onnxruntime>=1.19",
+    "pillow>=10.4",
+    "tesserocr>=2.7",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[project.scripts]
+pipeflow-server = "pipeflow.api:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pipeflow"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

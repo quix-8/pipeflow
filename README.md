@@ -1,3 +1,39 @@
+# Pipeflow
+
+Распознавание цифр, таблиц и текста. Проект состоит из двух частей:
+
+- [`server/`](./server) — Python-сервер (FastAPI) со всей ML-частью: предобработка OpenCV, сегментация,
+  MNIST через onnxruntime, Tesseract через tesserocr, сборка результата.
+- [`shared/`](./shared/src) + [`desktopApp/`](./desktopApp) — Compose Desktop клиент на Kotlin, который отправляет
+  изображение на сервер (Ktor) и показывает результат.
+
+## Сервер
+
+```bash
+cd server
+uv sync --extra dev          # или: python -m venv .venv && .venv/bin/pip install -e '.[dev]'
+uv run pipeflow-server       # http://127.0.0.1:8000, документация API: /docs
+uv run pytest
+```
+
+Переменные окружения: `MNIST_MODEL` (путь к `mnist-12.onnx`), `TESSDATA_PREFIX` (каталог с `rus`/`eng.traineddata`),
+`PIPEFLOW_HOST`, `PIPEFLOW_PORT`.
+
+API:
+- `POST /recognize?pipeline=mnist|mnist_table|tesseract` — multipart-поле `file` с изображением. Ответ содержит
+  подготовленное изображение (`preparedPng`, base64), распознанные регионы и собранные блоки текста.
+- `GET /pipelines`, `GET /health`.
+
+## Клиент
+
+Приложение само запускает сервер (`LocalServer`): ищет каталог `server/`, при первом запуске создаёт `.venv`
+и ставит зависимости (через `uv`, если он есть, иначе через `python -m venv` + `pip`), выбирает свободный порт
+и ждёт готовности, показывая статус в окне. Логи пишутся в `server/server.log` и `server/install.log`.
+Сервер завершается вместе с приложением, в том числе при аварийном закрытии (он следит за stdin).
+
+- `PIPEFLOW_SERVER` — использовать уже запущенный сервер и ничего не стартовать.
+- `PIPEFLOW_SERVER_DIR` — путь к каталогу `server/`, если он не лежит рядом с проектом.
+
 This is a Kotlin Multiplatform project targeting Desktop (JVM).
 
 * [/shared](./shared/src) is for code that will be shared across your Compose Multiplatform applications. It contains

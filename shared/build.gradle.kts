@@ -18,15 +18,16 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.filekit.dialogs)
             implementation(libs.filekit.dialogs.compose)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.contentNegotiation)
+            implementation(libs.ktor.serialization.kotlinxJson)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
-            implementation(libs.onnxruntime)
-            implementation(libs.tess4j)
-            implementation(libs.openpnp.opencv)
             implementation(libs.slf4j.simple)
         }
     }
